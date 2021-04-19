@@ -1,0 +1,57 @@
+import pytest
+import advert
+import json
+
+
+def test_advert():
+    info_str = """{
+     "title": "iPhone X", 
+     "price": 100,
+     "location": {
+      "address": "город Самара, улица Мориса Тореза, 50",
+      "metro_stations": ["Спортивная", "Гагаринская"]
+     }   
+     }"""
+    actual = advert.dict_to_obj(json.loads(info_str), advert.Advert)
+    expected_address = "город Самара, улица Мориса Тореза, 50"
+    assert actual.location.address == expected_address
+
+
+def test_price_below_zero():
+    info_str = """{
+     "title": "iPhone X", 
+     "price": -100,
+     "location": {
+      "address": "город Самара, улица Мориса Тореза, 50",
+      "metro_stations": ["Спортивная", "Гагаринская"]
+     }   
+     }"""
+    with pytest.raises(ValueError):
+        advert.dict_to_obj(json.loads(info_str), advert.Advert)
+
+
+def test_no_price_in_json():
+    info_str = """{
+     "title": "iPhone X", 
+     "location": {
+      "address": "город Самара, улица Мориса Тореза, 50",
+      "metro_stations": ["Спортивная", "Гагаринская"]
+     }   
+     }"""
+    actual = advert.dict_to_obj(json.loads(info_str), advert.Advert)
+    expected_price = 0
+    assert actual.price == expected_price
+
+
+def test_title():
+    info_str = """{
+          "title": "Вельш-корги",
+          "price": 1000,
+          "class": "dogs",
+          "location": {
+            "address": "сельское поселение Ельдигинское, поселок санатория Тишково, 25"
+          }
+        }"""
+    actual = advert.dict_to_obj(json.loads(info_str), advert.Advert)
+    expected_title = 'Вельш-корги'
+    assert actual.title == expected_title
