@@ -27,6 +27,19 @@ class Advert(ColorizeMixin):
         if keyword.iskeyword(key):
             key = key + "_"
         super.__setattr__(self, key, value)
+        
+       
+    @property
+    def title(self):
+        return self._title
+
+
+    @title.setter
+    def title(self, var: str):
+        if var is None or len(var) == 0:
+            raise ValueError("No title!")
+        self._title = var
+        
 
     @property
     def price(self):
